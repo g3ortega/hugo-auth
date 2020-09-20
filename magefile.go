@@ -3,10 +3,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"os/exec"
-
 	"github.com/g3ortega/hugo-auth"
 )
 
