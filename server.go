@@ -59,11 +59,11 @@ func App() {
 			return
 		}
 
-		if user.RawData["hd"] != os.Getenv("ORGANIZATION") {
+		if user.RawData["hd"] == os.Getenv("ORGANIZATION") {
+			ctx.Redirect("/")
+		} else {
 			ctx.Redirect("/logout")
 		}
-
-		ctx.Redirect("/")
 	})
 
 	app.Get("/logout", func(ctx *fiber.Ctx) {

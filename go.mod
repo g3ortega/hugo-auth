@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/go-git/go-git/v5 v5.1.0
 	github.com/gofiber/fiber v1.14.6
+	github.com/gopherdata/gophernotes v0.7.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/markbates/goth v1.64.2
 	github.com/otiai10/copy v1.2.0

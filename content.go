@@ -7,6 +7,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	c "github.com/otiai10/copy"
 )
@@ -15,6 +16,7 @@ type source struct {
 	GitRepo     string
 	ProjectSlug string
 	DocsDir     string
+	Branch      string
 }
 
 type sources struct {
@@ -49,6 +51,12 @@ func UpdateContent() {
 			fmt.Println(err)
 		}
 
+		w, err := r.Worktree()
+
+		err = w.Checkout(&git.CheckoutOptions{
+			Branch: plumbing.NewBranchReferenceName(repo.Branch),
+		})
+
 		c.Copy("./"+repo.ProjectSlug+"/"+repo.DocsDir, "./content/en/docs/"+repo.ProjectSlug)
 		os.RemoveAll("./" + repo.ProjectSlug)
 
@@ -64,4 +72,3 @@ func UpdateContent() {
 		fmt.Println(r)
 	}
 }
-
