@@ -1,4 +1,4 @@
-package hugo_auth
+package content
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ type sources struct {
 	Sources map[string]source
 }
 
-// UpdateContent import documentation from multiple GitHub repos
+// Import docs from different sources
 func UpdateContent() {
 	fmt.Println("Importing content...")
 
@@ -37,7 +37,6 @@ func UpdateContent() {
 	for _, repo := range config.Sources {
 		os.RemoveAll("./content/en/docs/" + repo.ProjectSlug)
 		os.MkdirAll("./content/en/docs/"+repo.ProjectSlug, 0755)
-		os.RemoveAll("./" + repo.ProjectSlug)
 
 		r, err := git.PlainClone("./"+repo.ProjectSlug, false, &git.CloneOptions{
 			Auth: &http.BasicAuth{
@@ -58,22 +57,16 @@ func UpdateContent() {
 			Branch: plumbing.NewBranchReferenceName(repo.Branch),
 		})
 
-		if err != nil {
-			fmt.Println(err)
-			os.RemoveAll("./" + repo.ProjectSlug)
-			os.RemoveAll("./content/en/docs/" + repo.ProjectSlug)
-		} else {
-			c.Copy("./"+repo.ProjectSlug+"/"+repo.DocsDir, "./content/en/docs/"+repo.ProjectSlug)
-			os.RemoveAll("./" + repo.ProjectSlug)
+		c.Copy("./"+repo.ProjectSlug+"/"+repo.DocsDir, "./content/en/docs/"+repo.ProjectSlug)
+		os.RemoveAll("./" + repo.ProjectSlug)
 
-			cmd := exec.Command("hugo")
+		cmd := exec.Command("hugo")
 
-			fmt.Printf("Running command and waiting for it to finish...")
-			cmdErr := cmd.Run()
+		fmt.Printf("Running command and waiting for it to finish...")
+		cmdErr := cmd.Run()
 
-			if cmdErr != nil {
-				fmt.Printf("Command finished with error: %v", cmdErr)
-			}
+		if cmdErr != nil {
+			fmt.Printf("Command finished with error: %v", cmdErr)
 		}
 
 		fmt.Println(r)
